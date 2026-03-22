@@ -1,14 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/domain/domain.dart';
-import 'package:base_flutter_app/entity/entity.dart';
 import 'package:base_flutter_app/presentation/presentation.dart';
-import 'package:base_flutter_app/theme/theme.dart';
 
 final _logger = CustomLogger.create(tag: (SplashPage).toString());
 
@@ -19,88 +15,321 @@ class SplashPage extends ConsumerStatefulWidget {
   ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ConsumerState<SplashPage> with SingleTickerProviderStateMixin {
-  static const _animationTime = 2000;
+class _SplashPageState extends ConsumerState<SplashPage>
+    with TickerProviderStateMixin {
+  static const _animationTime = 2500;
 
-  late AnimationController controller;
-  late Animation<double> fadeIn;
-  late Animation<double> fadeOut;
-  late Animation<Offset> moveUp;
-  late Animation<double> circleRadius;
-  late Animation<double> circleFadeIn;
+  late AnimationController _mainController;
+  late AnimationController _loadingController;
+  late Animation<double> _logoFadeIn;
+  late Animation<double> _logoScale;
+  late Animation<double> _titleFadeIn;
+  late Animation<double> _subtitleFadeIn;
+  late Animation<double> _bottomFadeIn;
+  late Animation<double> _loadingProgress;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: _animationTime), vsync: this);
-    fadeIn = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: controller, curve: const Interval(0, 500 / _animationTime)),
+
+    _mainController = AnimationController(
+      duration: const Duration(milliseconds: _animationTime),
+      vsync: this,
     );
 
-    moveUp = Tween<Offset>(begin: const Offset(0, 3), end: Offset.zero).animate(
-      CurvedAnimation(parent: controller, curve: const Interval(0, 700 / _animationTime, curve: Curves.easeInOutSine)),
+    _loadingController = AnimationController(
+      duration: const Duration(milliseconds: 3000),
+      vsync: this,
     );
 
-    fadeOut = Tween<double>(begin: 1, end: 0).animate(
+    // 로고 페이드인 + 스케일
+    _logoFadeIn = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: controller,
-        curve: const Interval(1000 / _animationTime, 1, curve: Curves.easeOut),
+        parent: _mainController,
+        curve: const Interval(0, 0.3, curve: Curves.easeOut),
+      ),
+    );
+    _logoScale = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0, 0.3, curve: Curves.easeOutBack),
       ),
     );
 
-    circleFadeIn = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: controller, curve: const Interval(1200 / _animationTime, 1, curve: Curves.easeOut)),
+    // 타이틀 페이드인
+    _titleFadeIn = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0.25, 0.5, curve: Curves.easeOut),
+      ),
     );
 
-    circleRadius = Tween<double>(begin: 0, end: 1000).animate(
-      CurvedAnimation(parent: controller, curve: const Interval(1200 / _animationTime, 1, curve: Curves.easeOut)),
+    // 서브타이틀 페이드인
+    _subtitleFadeIn = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0.35, 0.6, curve: Curves.easeOut),
+      ),
     );
 
-    controller.forward();
-    WidgetsBinding.instance.addPostFrameCallback((_) => unawaited(appInitialize()));
+    // 하단 영역 페이드인
+    _bottomFadeIn = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _mainController,
+        curve: const Interval(0.5, 0.8, curve: Curves.easeOut),
+      ),
+    );
+
+    // 로딩 프로그레스
+    _loadingProgress = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _loadingController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _mainController.forward();
+    _loadingController.forward();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => unawaited(appInitialize()));
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _mainController.dispose();
+    _loadingController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0E1A),
+      body: Stack(
+        children: [
+          // 배경 그라디언트
+          _buildBackground(),
+          // 배경 격자 패턴
+          _buildGridPattern(),
+          // 메인 컨텐츠
+          _buildContent(),
+          // 하단 정보
+          _buildBottomInfo(),
+        ],
+      ),
+    );
+  }
 
-    return DefaultLayout(
-      backgroundColor: Palette.primaryNormal,
-      child: Center(
-        child: Stack(
-          children: [
-            /// logo animation
-            FadeTransition(
-              opacity: fadeOut,
-              child: FadeTransition(
-                opacity: fadeIn,
-                child: SlideTransition(
-                  position: moveUp,
-                  child: const ImageAsset(CImages.logoWhite, size: 48),
-                ),
+  /// 배경 그라디언트
+  Widget _buildBackground() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment(0, -0.2),
+          radius: 1.2,
+          colors: [
+            Color(0xFF141B2D),
+            Color(0xFF0A0E1A),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 배경 격자 패턴
+  Widget _buildGridPattern() {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: _GridPatternPainter(),
+      ),
+    );
+  }
+
+  /// 메인 컨텐츠 (로고 + 타이틀)
+  Widget _buildContent() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 비트코인 아이콘
+          FadeTransition(
+            opacity: _logoFadeIn,
+            child: ScaleTransition(
+              scale: _logoScale,
+              child: _buildBitcoinIcon(),
+            ),
+          ),
+          const SizedBox(height: 32),
+          // SOVEREIGN VAULT 타이틀
+          FadeTransition(
+            opacity: _titleFadeIn,
+            child: const Text(
+              'SOVEREIGN VAULT',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                letterSpacing: 1.5,
+                height: 1.2,
               ),
             ),
+          ),
+          const SizedBox(height: 12),
+          // MVRV INDEX 서브타이틀
+          FadeTransition(
+            opacity: _subtitleFadeIn,
+            child: const Text(
+              'M V R V   I N D E X',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF6B7A99),
+                letterSpacing: 6,
+                height: 1.2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            /// circle animation
-            FadeTransition(
-              opacity: circleFadeIn,
-              child: AnimatedBuilder(
-                animation: controller,
-                builder: (_, __) => CustomPaint(
-                  painter: _CirclePainter(
-                    radius: circleRadius.value,
-                    offset: Offset(size.width / 3, size.height / 4),
+  /// 비트코인 아이콘 컨테이너
+  Widget _buildBitcoinIcon() {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E2537),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF9500).withValues(alpha: 0.15),
+            blurRadius: 30,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: const Center(
+        child: Text(
+          '₿',
+          style: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFFFF9500),
+            height: 1.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 하단 정보 영역
+  Widget _buildBottomInfo() {
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: SafeArea(
+        child: FadeTransition(
+          opacity: _bottomFadeIn,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 로딩 프로그레스 바
+                AnimatedBuilder(
+                  animation: _loadingController,
+                  builder: (context, _) => _buildProgressBar(),
+                ),
+                const SizedBox(height: 16),
+                // 하단 텍스트 정보
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // ENCRYPTED CONNECTION
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.shield_outlined,
+                          size: 14,
+                          color: const Color(0xFFFF9500).withValues(alpha: 0.8),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'ENCRYPTED CONNECTION',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFFFF9500).withValues(alpha: 0.8),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // NODE 정보
+                    Row(
+                      children: [
+                        Text(
+                          'NODE: 0X21F...',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white.withValues(alpha: 0.4),
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF00E676),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 프로그레스 바
+  Widget _buildProgressBar() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: FractionallySizedBox(
+        widthFactor: 0.35,
+        child: Container(
+          height: 3,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(2),
+            color: Colors.white.withValues(alpha: 0.05),
+          ),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: _loadingProgress.value,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFF9500),
+                      Color(0xFFFF6A13),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -111,23 +340,9 @@ class _SplashPageState extends ConsumerState<SplashPage> with SingleTickerProvid
     // 앱 업데이트가 필요한 경우 초기화 중단.
     await postLaunchSetup();
 
-    controller.reset();
-    unawaited(controller.forward());
-    final animationTime = Future.delayed(const Duration(milliseconds: _animationTime));
-/*
-    final signInWithTokenResult = await locator<AuthUsecase>().execute<Result>(usecase: SignInWithTokenUsecase());
-    if (signInWithTokenResult is Success) {
-      await UserDataManager.initialize(delay: animationTime);
-    } else {
-      await Future.wait([animationTime]);
-      if (await locator<AppSettingManager>().getIsFirstInstalled()) {
-        CRoute.redirectToOnboarding();
-      } else {
-        CRoute.redirectToLogin();
-      }
-    }
-
- */
+    // 로딩 애니메이션 완료 대기
+    await Future.delayed(const Duration(milliseconds: _animationTime));
+    CRoute.redirectToDashboard();
     _logger.d('App initialize end');
   }
 
@@ -147,26 +362,48 @@ class _SplashPageState extends ConsumerState<SplashPage> with SingleTickerProvid
   }
 }
 
-class _CirclePainter extends CustomPainter {
-  const _CirclePainter({
-    required this.radius,
-    required this.offset,
-  });
-
-  final double radius;
-  final Offset offset;
-
+/// 배경 격자 패턴 페인터
+class _GridPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Palette.fillWhite
-      ..style = PaintingStyle.fill;
+      ..color = const Color(0xFF1A2035).withValues(alpha: 0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.5;
 
-    canvas.drawCircle(offset, radius, paint);
+    // 하단 영역에 격자 사각형 그리기
+    final centerX = size.width / 2;
+    final centerY = size.height * 0.75;
+    const squareSize = 60.0;
+    const gap = 12.0;
+    const radius = 12.0;
+
+    // 두 개의 사각형
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(centerX - squareSize / 2 - gap / 2, centerY),
+          width: squareSize,
+          height: squareSize,
+        ),
+        const Radius.circular(radius),
+      ),
+      paint,
+    );
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(centerX + squareSize / 2 + gap / 2, centerY),
+          width: squareSize,
+          height: squareSize,
+        ),
+        const Radius.circular(radius),
+      ),
+      paint,
+    );
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

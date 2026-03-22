@@ -10,7 +10,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 abstract class CRoute {
   CRoute._();
 
-  //static void redirectToMain() => (rootNavigatorKey.currentContext!).go(RoutePath.main.path);
+  static void redirectToDashboard() => (rootNavigatorKey.currentContext!).go(RoutePath.dashboard.path);
 
   static bool canPop() => (rootNavigatorKey.currentContext!).canPop();
 
@@ -25,6 +25,12 @@ final router = GoRouter(
     GoRoute(
       path: RoutePath.splash.path,
       builder: (_, _) => const SplashPage(),
+    ),
+
+    /// MVRV 대시보드
+    GoRoute(
+      path: RoutePath.dashboard.path,
+      builder: (_, _) => const DashboardPage(),
     ),
 
   ],
