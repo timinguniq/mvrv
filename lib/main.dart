@@ -10,8 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'core/app_config/remote_config.dart';
-import 'core/util/logger/custom_logger.dart';
+import 'core/core.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'firebase_options.dart';
@@ -28,6 +27,8 @@ Future<void> main() async {
       await dotenv.load();
 
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+      await CPackageInfo.initialize();
 
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
