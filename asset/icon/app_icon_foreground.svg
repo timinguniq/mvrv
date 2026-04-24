@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <g fill="#FFA06B" stroke="none" transform="translate(170, 170) scale(0.668)">
+    <rect x="416" y="220" width="52" height="120" rx="10"/>
+    <rect x="556" y="220" width="52" height="120" rx="10"/>
+    <rect x="416" y="684" width="52" height="120" rx="10"/>
+    <rect x="556" y="684" width="52" height="120" rx="10"/>
+    <path d="M 336 304
+             H 584
+             Q 684 304 684 404
+             Q 684 472 628 496
+             Q 696 516 696 596
+             Q 696 720 572 720
+             H 336
+             Z
+             M 424 384
+             V 472
+             H 560
+             Q 596 472 596 428
+             Q 596 384 560 384
+             Z
+             M 424 552
+             V 640
+             H 568
+             Q 608 640 608 596
+             Q 608 552 568 552
+             Z"
+          fill-rule="evenodd"/>
+  </g>
+</svg>
