@@ -1,107 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mvrv/entity/entity.dart';
-import 'package:mvrv/presentation/presentation.dart';
-import 'package:mvrv/theme/theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mvrv/presentation/presentation.dart';
 
-import 'widget/mvrv_insight_card.dart';
+import 'widget/index.dart';
 
-/// MVRV 대시보드 페이지
+/// 비트코인 MVRV Z-Score 대시보드 페이지
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
+  // UI 구성을 위한 임시 mock 데이터 – API 연동 시 Provider 로 교체
+  static const _btcPrice = 64281.90;
+  static const _change24h = 2.45;
+  static const _zScore = 2.41;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DefaultLayout(
-      appBar: AppBar(
-        title: Text('BTC MVRV Tracker', style: context.typo.heading1W600),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () => context.push(RoutePath.alertSetting.path),
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    return Scaffold(
+      backgroundColor: DashboardPalette.background,
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 현재 MVRV 요약
-            const SizedBox(height: 24),
-
-            /// 기간 필터
-            const SizedBox(height: 16),
-
-            /// MVRV 차트
-            const SizedBox(height: 24),
-
-            /// 일일 인사이트
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CurrentMvrvHeader extends StatelessWidget {
-  const _CurrentMvrvHeader({required this.data});
-
-  final MvrvData data;
-
-  @override
-  Widget build(BuildContext context) {
-    final zone = MvrvZone.fromRatio(data.mvrvRatio);
-    final zoneColor = switch (zone) {
-      MvrvZone.overvalued => Palette.statusDestructive,
-      MvrvZone.undervalued => Palette.statusPositive,
-      MvrvZone.neutral => context.color.label.normal,
-    };
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'MVRV Ratio',
-          style: context.typo.label1W500.copyWith(
-            color: context.color.label.alternative,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              data.mvrvRatio.toStringAsFixed(2),
-              style: context.typo.hero1W700.copyWith(color: zoneColor),
+            DashboardAppBar(
+              onNotificationTap: () =>
+                  context.push(RoutePath.alertSetting.path),
+              onProfileTap: () {},
             ),
-            const SizedBox(width: 12),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text(
-                'BTC \$${_formatPrice(data.btcPrice)}',
-                style: context.typo.body1W500.copyWith(
-                  color: context.color.label.neutral,
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    MarketPriceCard(
+                      price: _btcPrice,
+                      changePercent24h: _change24h,
+                    ),
+                    SizedBox(height: 16),
+                    MvrvZScoreCard(zScore: _zScore),
+                    SizedBox(height: 28),
+                    MvrvTrendChartCard(),
+                    SizedBox(height: 28),
+                    MetricCard(
+                      title: 'Delta Cap',
+                      value: '\$412.8B',
+                      description: 'Institutional base support',
+                    ),
+                    SizedBox(height: 14),
+                    MetricCard(
+                      title: 'Realized Cap',
+                      value: '\$621.2B',
+                      description: 'Current market cost basis',
+                    ),
+                    SizedBox(height: 14),
+                    MetricCard(
+                      title: 'Net Unrealized P/L',
+                      value: '0.582',
+                      description: 'Aggregated profit ratio',
+                    ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
-      ],
+      ),
     );
-  }
-
-  String _formatPrice(double price) {
-    if (price >= 1000) {
-      final formatted = price.toStringAsFixed(0);
-      final buffer = StringBuffer();
-      for (var i = 0; i < formatted.length; i++) {
-        if (i > 0 && (formatted.length - i) % 3 == 0) buffer.write(',');
-        buffer.write(formatted[i]);
-      }
-      return buffer.toString();
-    }
-    return price.toStringAsFixed(2);
   }
 }
