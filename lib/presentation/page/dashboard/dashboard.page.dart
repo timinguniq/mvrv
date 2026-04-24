@@ -13,13 +13,9 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return DefaultLayout(
       appBar: AppBar(
-        title: Text(
-          'BTC MVRV Tracker',
-          style: context.typo.heading1W600,
-        ),
+        title: Text('BTC MVRV Tracker', style: context.typo.heading1W600),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -33,19 +29,15 @@ class DashboardPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// 현재 MVRV 요약
-
             const SizedBox(height: 24),
 
             /// 기간 필터
-
             const SizedBox(height: 16),
 
             /// MVRV 차트
-
             const SizedBox(height: 24),
 
             /// 일일 인사이트
-
           ],
         ),
       ),
