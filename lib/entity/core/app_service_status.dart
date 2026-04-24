@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
-import 'package:base_flutter_app/core/core.dart';
+import 'package:mvrv/core/core.dart';
 
 part 'app_service_status.freezed.dart';
 part 'app_service_status.g.dart';

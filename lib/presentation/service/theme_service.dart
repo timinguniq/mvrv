@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 class ThemeService with ChangeNotifier {

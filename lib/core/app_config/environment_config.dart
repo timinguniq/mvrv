@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:base_flutter_app/core/core.dart';
+import 'package:mvrv/core/core.dart';
 
 final _logger = CustomLogger.create(tag: (EnvironmentConfig).toString());
 

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/entity/entity.dart';
 
 part 'app_initial_info.freezed.dart';
 part 'app_initial_info.g.dart';

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/entity/entity.dart';
 
 /// MVRV 온체인 데이터 API 클라이언트
 class MvrvApi {

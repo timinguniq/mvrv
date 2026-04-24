@@ -1,4 +1,4 @@
-import 'package:base_flutter_app/core/core.dart';
+import 'package:mvrv/core/core.dart';
 import 'package:logger/logger.dart';
 
 class CustomLogger extends Logger {

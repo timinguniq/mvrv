@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/data/data.dart';
-import 'package:base_flutter_app/domain/domain.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/data/data.dart';
+import 'package:mvrv/domain/domain.dart';
 
 final locator = GetIt.instance;
 

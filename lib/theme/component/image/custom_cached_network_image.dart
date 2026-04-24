@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/domain/domain.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/domain/domain.dart';
+import 'package:mvrv/theme/theme.dart';
 
 final _logger = CustomLogger.create(tag: (CCachedNetworkImage).toString());
 

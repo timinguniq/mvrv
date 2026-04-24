@@ -1,7 +1,7 @@
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/data/data.dart';
-import 'package:base_flutter_app/entity/entity.dart';
-import 'package:base_flutter_app/domain/domain.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/data/data.dart';
+import 'package:mvrv/entity/entity.dart';
+import 'package:mvrv/domain/domain.dart';
 
 final _logger = CustomLogger.create(tag: (MvrvRepositoryImpl).toString());
 

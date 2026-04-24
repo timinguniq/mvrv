@@ -1,5 +1,5 @@
 // 서버의 응답코드
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/entity/entity.dart';
 
 enum ResponseCode {
   //------------------------- new server -------------------------\\

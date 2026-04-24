@@ -1,4 +1,4 @@
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/entity/entity.dart';
 
 /// MVRV 데이터 Repository 인터페이스
 abstract class MvrvRepository {

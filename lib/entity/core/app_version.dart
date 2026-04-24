@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:base_flutter_app/core/core.dart';
+import 'package:mvrv/core/core.dart';
 
 part 'app_version.freezed.dart';
 part 'app_version.g.dart';

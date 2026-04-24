@@ -1,6 +1,6 @@
 {
-    "name": "base_flutter_app",
-    "short_name": "base_flutter_app",
+    "name": "mvrv",
+    "short_name": "mvrv",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
