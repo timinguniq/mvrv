@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:base_flutter_app/core/core.dart';
+import 'package:mvrv/core/core.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 final _logger = CustomLogger.create(tag: (CPackageInfo).toString());

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/entity/entity.dart';
-import 'package:base_flutter_app/presentation/presentation.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/entity/entity.dart';
+import 'package:mvrv/presentation/presentation.dart';
+import 'package:mvrv/theme/theme.dart';
 
 /// 일일 MVRV 인사이트 카드
 class MvrvInsightCard extends StatelessWidget {

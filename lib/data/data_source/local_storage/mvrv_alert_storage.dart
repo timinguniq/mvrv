@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/entity/entity.dart';
 
 /// MVRV 알림 설정 로컬 저장소
 class MvrvAlertStorage {

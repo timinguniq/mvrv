@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/presentation/presentation.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/presentation/presentation.dart';
 
 final _logger = CustomLogger.create(tag: (SplashPage).toString());
 

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/domain/domain.dart';
-import 'package:base_flutter_app/entity/entity.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/domain/domain.dart';
+import 'package:mvrv/entity/entity.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 

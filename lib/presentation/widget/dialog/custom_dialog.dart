@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/presentation/presentation.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/presentation/presentation.dart';
+import 'package:mvrv/theme/theme.dart';
 import 'package:go_router/go_router.dart';
 
 class CDialog<T> extends StatelessWidget {

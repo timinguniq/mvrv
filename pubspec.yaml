@@ -1,4 +1,4 @@
-name: base_flutter_app
+name: mvrv
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -42,6 +42,20 @@ dev_dependencies:
   freezed: ^3.2.5
   json_serializable: ^6.13.0
   change_app_package_name: ^1.5.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "asset/icon/app_icon.png"
+  web:
+    generate: true
+    image_path: "asset/icon/app_icon.png"
+    background_color: "#2A2D3E"
+    theme_color: "#2A2D3E"
+  adaptive_icon_background: "#2A2D3E"
+  adaptive_icon_foreground: "asset/icon/app_icon_foreground.png"
 
 flutter:
   uses-material-design: true

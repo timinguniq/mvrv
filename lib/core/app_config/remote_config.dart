@@ -5,10 +5,10 @@ import 'dart:io';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/core/core.dart';
-import 'package:base_flutter_app/entity/entity.dart';
-import 'package:base_flutter_app/presentation/presentation.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/core/core.dart';
+import 'package:mvrv/entity/entity.dart';
+import 'package:mvrv/presentation/presentation.dart';
+import 'package:mvrv/theme/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final _logger = CustomLogger.create(tag: (RemoteConfig).toString());

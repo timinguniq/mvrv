@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/theme/theme.dart';
+import 'package:mvrv/theme/theme.dart';
 
 part 'app_color.dart';
 part 'app_deco.dart';

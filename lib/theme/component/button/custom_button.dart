@@ -1,7 +1,7 @@
 //ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-import 'package:base_flutter_app/presentation/presentation.dart';
+import 'package:mvrv/presentation/presentation.dart';
 
 part 'custom_button_size.dart';
 part 'custom_button_type.dart';
