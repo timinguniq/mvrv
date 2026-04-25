@@ -21,11 +21,7 @@ class DashboardPage extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            DashboardAppBar(
-              onNotificationTap: () =>
-                  context.push(RoutePath.alertSetting.path),
-              onProfileTap: () {},
-            ),
+            const DashboardAppBar(),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
