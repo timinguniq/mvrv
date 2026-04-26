@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mvrv/theme/theme.dart';
 
 import 'dashboard_card.dart';
-import 'dashboard_palette.dart';
 
 /// Delta Cap / Realized Cap / Net Unrealized P/L 등 하단 메트릭 카드
 class MetricCard extends StatelessWidget {

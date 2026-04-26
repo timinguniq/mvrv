@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mvrv/theme/theme.dart';
 
 import 'dashboard_card.dart';
-import 'dashboard_palette.dart';
 
 /// 비트코인 현재가 카드
 class MarketPriceCard extends StatelessWidget {

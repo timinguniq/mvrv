@@ -1,9 +1,8 @@
 import 'dart:math' as math;
-
+import 'package:mvrv/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard_card.dart';
-import 'dashboard_palette.dart';
 
 /// 차트 기간 필터 (대시보드 전용)
 enum MvrvChartRange {

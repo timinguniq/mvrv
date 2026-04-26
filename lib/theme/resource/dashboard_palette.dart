@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// 대시보드 전용 다크 팔레트 (Splash 화면 컬러 참고)
-abstract class DashboardPalette {
+abstract class  DashboardPalette{
   /// 페이지 배경
   static const Color background = Color(0xFF0A0E1A);
 

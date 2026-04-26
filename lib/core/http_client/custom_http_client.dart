@@ -26,4 +26,15 @@ class CHttpClient {
       receiveTimeout: const Duration(seconds: 30),
     ),
   )..interceptors.add(_CustomInterceptor());
+
+  /// CoinGecko 시세 API용 Dio
+  static final Dio coinGeckoDio = Dio(
+    BaseOptions(
+      baseUrl: 'https://api.coingecko.com/api/v3',
+      contentType: 'application/json',
+      connectTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  )..interceptors.add(_CustomInterceptor());
 }

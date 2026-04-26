@@ -180,8 +180,8 @@ return failure(_that.error);case _:
 /// @nodoc
 
 
-class Success<T> implements Result<T> {
-  const Success(this.data);
+class Success<T> extends Result<T> {
+  const Success(this.data): super._();
   
 
  final  T data;
@@ -246,8 +246,8 @@ as T,
 /// @nodoc
 
 
-class Error<T> implements Result<T> {
-  const Error(this.error);
+class Error<T> extends Result<T> {
+  const Error(this.error): super._();
   
 
  final  ErrorResult error;

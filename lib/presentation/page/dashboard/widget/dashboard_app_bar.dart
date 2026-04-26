@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'dashboard_palette.dart';
+import 'package:mvrv/theme/theme.dart';
 
 /// 대시보드 상단 바 – 로고 + 알림 + 프로필 아이콘
 class DashboardAppBar extends StatelessWidget {
