@@ -14,18 +14,25 @@ void configureDependencyInjection(LocalStorage storage) {
 
 void _data(LocalStorage storage) {
   locator
+    ..registerSingleton<BtcPriceApi>(BtcPriceApi(CHttpClient.coinGeckoDio))
     ..registerSingleton<MvrvApi>(MvrvApi(CHttpClient.dio))
     ..registerSingleton<MvrvAlertStorage>(MvrvAlertStorage(storage));
 }
 
 void _repository() {
-  locator.registerSingleton<MvrvRepository>(
-    MvrvRepositoryImpl(locator<MvrvApi>(), locator<MvrvAlertStorage>()),
-  );
+  locator
+    ..registerSingleton<BtcPriceRepository>(
+      BtcPriceRepositoryImpl(locator<BtcPriceApi>()),
+    )
+    ..registerSingleton<MvrvRepository>(
+      MvrvRepositoryImpl(locator<MvrvApi>(), locator<MvrvAlertStorage>()),
+    );
 }
 
 void _usecase() {
   // 현재 MVRV 서비스는 Repository 직접 사용
+  locator
+    ..registerSingleton<BtcPriceUsecase>(BtcPriceUsecase(locator<BtcPriceRepository>()));
 }
 
 void _manager() {

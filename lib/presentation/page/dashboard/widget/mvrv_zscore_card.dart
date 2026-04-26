@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:mvrv/theme/theme.dart';
 import 'dashboard_card.dart';
-import 'dashboard_palette.dart';
 
 /// MVRV Z-Score 구간
 enum MvrvZScoreZone {

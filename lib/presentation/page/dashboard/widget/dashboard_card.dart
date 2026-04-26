@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'dashboard_palette.dart';
+import 'package:mvrv/theme/theme.dart';
 
 /// 대시보드 공통 카드 (좌측 액센트 스트라이프 옵션 지원)
 class DashboardCard extends StatelessWidget {
