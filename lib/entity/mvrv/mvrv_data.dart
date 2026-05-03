@@ -3,18 +3,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'mvrv_data.freezed.dart';
 part 'mvrv_data.g.dart';
 
-/// MVRV 차트 데이터 포인트
+/// MVRV Z-Score 데이터 포인트
 @freezed
 abstract class MvrvData with _$MvrvData {
   const factory MvrvData({
-    /// 날짜
+    /// 데이터 기준일
     required DateTime date,
 
-    /// BTC 가격 (USD)
-    required double btcPrice,
-
-    /// MVRV 비율
-    required double mvrvRatio,
+    /// MVRV Z-Score 값
+    required double mvrvZscore,
   }) = _MvrvData;
 
   factory MvrvData.fromJson(Map<String, dynamic> json) =>

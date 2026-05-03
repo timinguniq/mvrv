@@ -37,4 +37,15 @@ class CHttpClient {
       receiveTimeout: const Duration(seconds: 10),
     ),
   )..interceptors.add(_CustomInterceptor());
+
+  /// BGeometrics(MVRV Z-Score) 온체인 API용 Dio
+  static final Dio bgeometricsDio = Dio(
+    BaseOptions(
+      baseUrl: 'https://bitcoin-data.com/api/v1',
+      contentType: 'application/json',
+      connectTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  )..interceptors.add(_CustomInterceptor());
 }
