@@ -22,7 +22,9 @@ class DashboardPage extends StatelessWidget {
       child: BaseView<DashboardViewModel>(
         viewModel: DashboardViewModel(),
         builder: (context, viewModel) {
-          if (viewModel.btcPrice == null || viewModel.mvrv == null) {
+          if (viewModel.btcPrice == null ||
+              viewModel.mvrv == null ||
+              viewModel.mvrvHistory == null) {
             return SizedBox();
           }
 
@@ -41,7 +43,11 @@ class DashboardPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   MvrvZScoreCard(zScore: viewModel.mvrv!.mvrvZscore),
                   const SizedBox(height: 28),
-                  const MvrvTrendChartCard(),
+                  MvrvTrendChartCard(
+                    range: viewModel.chartRange,
+                    history: viewModel.mvrvHistory!,
+                    onRangeChanged: viewModel.changeChartRange,
+                  ),
                   const SizedBox(height: 28),
                   const MetricCard(
                     title: 'Delta Cap',

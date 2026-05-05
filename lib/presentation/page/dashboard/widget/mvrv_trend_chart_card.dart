@@ -1,37 +1,37 @@
 import 'dart:math' as math;
+import 'package:mvrv/entity/entity.dart';
 import 'package:mvrv/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'dashboard_card.dart';
 
 /// 차트 기간 필터 (대시보드 전용)
+///
+/// [days] 가 null 이면 전체 범위 (필터 없음)
 enum MvrvChartRange {
   oneMonth('1M', 30),
   sixMonths('6M', 180),
   oneYear('1Y', 365),
-  all('ALL', 1500);
+  all('ALL', null);
 
   const MvrvChartRange(this.label, this.days);
 
   final String label;
-  final int days;
+  final int? days;
 }
 
 /// MVRV Index Trend 카드 – 범위 토글 + 라인 차트
-class MvrvTrendChartCard extends StatefulWidget {
+class MvrvTrendChartCard extends StatelessWidget {
   const MvrvTrendChartCard({
     super.key,
-    this.initialRange = MvrvChartRange.oneYear,
+    required this.range,
+    required this.history,
+    required this.onRangeChanged,
   });
 
-  final MvrvChartRange initialRange;
-
-  @override
-  State<MvrvTrendChartCard> createState() => _MvrvTrendChartCardState();
-}
-
-class _MvrvTrendChartCardState extends State<MvrvTrendChartCard> {
-  late MvrvChartRange _range = widget.initialRange;
+  final MvrvChartRange range;
+  final List<MvrvData> history;
+  final ValueChanged<MvrvChartRange> onRangeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +55,12 @@ class _MvrvTrendChartCardState extends State<MvrvTrendChartCard> {
                 ),
               ),
               const SizedBox(width: 12),
-              _RangeSelector(
-                selected: _range,
-                onSelected: (v) => setState(() => _range = v),
-              ),
+              _RangeSelector(selected: range, onSelected: onRangeChanged),
             ],
           ),
           const SizedBox(height: 10),
           Text(
-            _description(_range),
+            _description(range),
             style: const TextStyle(
               color: DashboardPalette.textSecondary,
               fontSize: 13,
@@ -72,9 +69,9 @@ class _MvrvTrendChartCardState extends State<MvrvTrendChartCard> {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(height: 180, child: _TrendChart(range: _range)),
+          SizedBox(height: 180, child: _TrendChart(history: history)),
           const SizedBox(height: 10),
-          _AxisLabels(range: _range),
+          _AxisLabels(history: history),
         ],
       ),
     );
@@ -146,13 +143,14 @@ class _RangeSelector extends StatelessWidget {
 }
 
 class _AxisLabels extends StatelessWidget {
-  const _AxisLabels({required this.range});
+  const _AxisLabels({required this.history});
 
-  final MvrvChartRange range;
+  final List<MvrvData> history;
 
   @override
   Widget build(BuildContext context) {
-    final labels = _labelsForRange(range);
+    final labels = _labelsFor(history);
+    if (labels.isEmpty) return const SizedBox.shrink();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: labels
@@ -171,50 +169,66 @@ class _AxisLabels extends StatelessWidget {
     );
   }
 
-  List<String> _labelsForRange(MvrvChartRange range) {
-    return switch (range) {
-      MvrvChartRange.oneMonth => const ['W1', 'W2', 'W3', 'W4', 'NOW'],
-      MvrvChartRange.sixMonths => const ['MAY', 'JUL', 'SEP', 'NOV', 'JAN'],
-      MvrvChartRange.oneYear => const [
-        'OCT 23',
-        'JAN 24',
-        'APR 24',
-        'JUL 24',
-        'OCT 24',
-      ],
-      MvrvChartRange.all => const ['2018', '2020', '2022', '2024', '2026'],
-    };
+  /// 데이터 양 끝 + 균등 3개 = 총 5개 라벨 (MMM dd)
+  List<String> _labelsFor(List<MvrvData> history) {
+    if (history.isEmpty) return const [];
+    const count = 5;
+    if (history.length < count) {
+      return history.map(_formatDate).toList();
+    }
+    return List.generate(count, (i) {
+      final idx = ((history.length - 1) * i / (count - 1)).round();
+      return _formatDate(history[idx]);
+    });
+  }
+
+  static const _months = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC',
+  ];
+
+  String _formatDate(MvrvData data) {
+    final m = _months[data.date.month - 1];
+    final d = data.date.day.toString().padLeft(2, '0');
+    return '$m $d';
   }
 }
 
 class _TrendChart extends StatelessWidget {
-  const _TrendChart({required this.range});
+  const _TrendChart({required this.history});
 
-  final MvrvChartRange range;
+  final List<MvrvData> history;
 
   @override
   Widget build(BuildContext context) {
+    if (history.isEmpty) {
+      return const Center(
+        child: Text(
+          'No data',
+          style: TextStyle(
+            color: DashboardPalette.textMuted,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+          ),
+        ),
+      );
+    }
+    final series = history.map((e) => e.mvrvZscore).toList();
     return CustomPaint(
-      painter: _TrendChartPainter(_seriesForRange(range)),
+      painter: _TrendChartPainter(series),
       size: Size.infinite,
     );
-  }
-
-  /// 범위별 mock 시리즈 – 시각적 변별력을 위해 결정적으로 생성
-  List<double> _seriesForRange(MvrvChartRange range) {
-    final seed = range.index + 1;
-    final random = math.Random(seed * 31);
-    final points = <double>[];
-    const count = 60;
-    var value = 0.5;
-    for (var i = 0; i < count; i++) {
-      final progress = i / (count - 1);
-      // 완만한 상승 트렌드 + 노이즈
-      final trend = 0.5 + progress * 1.6 + (range.index * 0.1);
-      value = trend + (random.nextDouble() - 0.5) * 0.35;
-      points.add(value);
-    }
-    return points;
   }
 }
 
@@ -233,6 +247,14 @@ class _TrendChartPainter extends CustomPainter {
     for (var i = 0; i < 4; i++) {
       final y = size.height * (i / 3);
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
+    }
+
+    if (series.length == 1) {
+      final paint = Paint()
+        ..color = DashboardPalette.accent
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(Offset(size.width / 2, size.height / 2), 3, paint);
+      return;
     }
 
     final minV = series.reduce(math.min);
