@@ -34,7 +34,7 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   Future<void> _fetchBtcPrice() async {
-    final result = await locator<BtcPriceUsecase>().execute<Result<BtcPrice>>(
+    final result = await locator<MvrvUsecase>().execute<Result<BtcPrice>>(
       usecase: GetBtcPriceUsecase(),
     );
     result.when(

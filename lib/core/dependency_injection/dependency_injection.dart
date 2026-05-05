@@ -13,25 +13,21 @@ void configureDependencyInjection(LocalStorage storage) {
 }
 
 void _data(LocalStorage storage) {
-  locator
-    ..registerSingleton<BtcPriceApi>(BtcPriceApi(CHttpClient.coinGeckoDio))
-    ..registerSingleton<MvrvApi>(MvrvApi(CHttpClient.bgeometricsDio));
+  locator.registerSingleton<MvrvApi>(
+    MvrvApi(CHttpClient.bgeometricsDio, CHttpClient.coinGeckoDio),
+  );
 }
 
 void _repository() {
-  locator
-    ..registerSingleton<BtcPriceRepository>(
-      BtcPriceRepositoryImpl(locator<BtcPriceApi>()),
-    )
-    ..registerSingleton<MvrvRepository>(MvrvRepositoryImpl(locator<MvrvApi>()));
+  locator.registerSingleton<MvrvRepository>(
+    MvrvRepositoryImpl(locator<MvrvApi>()),
+  );
 }
 
 void _usecase() {
-  locator
-    ..registerSingleton<BtcPriceUsecase>(
-      BtcPriceUsecase(locator<BtcPriceRepository>()),
-    )
-    ..registerSingleton<MvrvUsecase>(MvrvUsecase(locator<MvrvRepository>()));
+  locator.registerSingleton<MvrvUsecase>(
+    MvrvUsecase(locator<MvrvRepository>()),
+  );
 }
 
 void _manager() {

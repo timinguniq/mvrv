@@ -5,11 +5,11 @@ import 'package:mvrv/entity/entity.dart';
 final _logger = CustomLogger.create(tag: (GetBtcPriceUsecase).toString());
 
 /// 비트코인 현재가 조회 UseCase
-class GetBtcPriceUsecase extends RemoteUsecase<BtcPriceRepository> {
+class GetBtcPriceUsecase extends RemoteUsecase<MvrvRepository> {
   GetBtcPriceUsecase();
 
   @override
-  Future<Result<BtcPrice>> call(BtcPriceRepository repository) async {
+  Future<Result<BtcPrice>> call(MvrvRepository repository) async {
     final response = await repository.getBtcPrice();
 
     return response.map(
