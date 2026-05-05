@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'dashboard_card.dart';
 
+/// Y축 라벨 영역 폭 / 차트 상하 여백 (차트와 라벨 위치 정렬용)
+const double _kYAxisWidth = 40.0;
+const double _kChartVerticalPadding = 8.0;
+
 /// 차트 기간 필터 (대시보드 전용)
 ///
 /// [days] 가 null 이면 전체 범위 (필터 없음)
@@ -69,9 +73,24 @@ class MvrvTrendChartCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(height: 180, child: _TrendChart(history: history)),
+          SizedBox(
+            height: 180,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: _kYAxisWidth,
+                  child: _YAxisLabels(history: history),
+                ),
+                Expanded(child: _TrendChart(history: history)),
+              ],
+            ),
+          ),
           const SizedBox(height: 10),
-          _AxisLabels(history: history),
+          Padding(
+            padding: const EdgeInsets.only(left: _kYAxisWidth),
+            child: _AxisLabels(history: history),
+          ),
         ],
       ),
     );
@@ -204,6 +223,64 @@ class _AxisLabels extends StatelessWidget {
   }
 }
 
+/// 차트 좌측 세로축 라벨 (max → min, 4단계)
+class _YAxisLabels extends StatelessWidget {
+  const _YAxisLabels({required this.history});
+
+  final List<MvrvData> history;
+
+  @override
+  Widget build(BuildContext context) {
+    if (history.isEmpty) return const SizedBox.shrink();
+    final zscores = history.map((e) => e.mvrvZscore).toList();
+    final minV = zscores.reduce(math.min);
+    final maxV = zscores.reduce(math.max);
+    final flat = (maxV - minV).abs() < 0.001;
+    final span = flat ? 1.0 : (maxV - minV);
+
+    const labelStyle = TextStyle(
+      color: DashboardPalette.textMuted,
+      fontSize: 10,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.4,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final chartHeight = constraints.maxHeight - 2 * _kChartVerticalPadding;
+        if (flat) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                maxV.toStringAsFixed(1),
+                textAlign: TextAlign.right,
+                style: labelStyle,
+              ),
+            ),
+          );
+        }
+        return Stack(
+          children: List.generate(4, (i) {
+            final value = maxV - span * (i / 3);
+            final y = _kChartVerticalPadding + chartHeight * (i / 3);
+            return Positioned(
+              top: y - 7,
+              left: 0,
+              right: 8,
+              child: Text(
+                value.toStringAsFixed(1),
+                textAlign: TextAlign.right,
+                style: labelStyle,
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+}
+
 class _TrendChart extends StatelessWidget {
   const _TrendChart({required this.history});
 
@@ -241,11 +318,16 @@ class _TrendChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (series.isEmpty) return;
 
+    // Y축 라벨과 정렬되는 차트 영역 (상하 여백 적용)
+    final chartTop = _kChartVerticalPadding;
+    final chartBottom = size.height - _kChartVerticalPadding;
+    final chartHeight = chartBottom - chartTop;
+
     final gridPaint = Paint()
       ..color = DashboardPalette.divider
       ..strokeWidth = 0.6;
     for (var i = 0; i < 4; i++) {
-      final y = size.height * (i / 3);
+      final y = chartTop + chartHeight * (i / 3);
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
 
@@ -253,7 +335,11 @@ class _TrendChartPainter extends CustomPainter {
       final paint = Paint()
         ..color = DashboardPalette.accent
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(Offset(size.width / 2, size.height / 2), 3, paint);
+      canvas.drawCircle(
+        Offset(size.width / 2, chartTop + chartHeight / 2),
+        3,
+        paint,
+      );
       return;
     }
 
@@ -263,8 +349,7 @@ class _TrendChartPainter extends CustomPainter {
 
     Offset mapPoint(int i) {
       final x = size.width * (i / (series.length - 1));
-      final y =
-          size.height - ((series[i] - minV) / span) * size.height * 0.85 - 10;
+      final y = chartBottom - ((series[i] - minV) / span) * chartHeight;
       return Offset(x, y);
     }
 
