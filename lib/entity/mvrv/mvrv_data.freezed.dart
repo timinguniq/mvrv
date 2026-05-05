@@ -15,10 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MvrvData {
 
-/// 날짜
- DateTime get date;/// BTC 가격 (USD)
- double get btcPrice;/// MVRV 비율
- double get mvrvRatio;
+/// 데이터 기준일
+ DateTime get date;/// MVRV Z-Score 값
+ double get mvrvZscore;
 /// Create a copy of MvrvData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +30,16 @@ $MvrvDataCopyWith<MvrvData> get copyWith => _$MvrvDataCopyWithImpl<MvrvData>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MvrvData&&(identical(other.date, date) || other.date == date)&&(identical(other.btcPrice, btcPrice) || other.btcPrice == btcPrice)&&(identical(other.mvrvRatio, mvrvRatio) || other.mvrvRatio == mvrvRatio));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MvrvData&&(identical(other.date, date) || other.date == date)&&(identical(other.mvrvZscore, mvrvZscore) || other.mvrvZscore == mvrvZscore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,btcPrice,mvrvRatio);
+int get hashCode => Object.hash(runtimeType,date,mvrvZscore);
 
 @override
 String toString() {
-  return 'MvrvData(date: $date, btcPrice: $btcPrice, mvrvRatio: $mvrvRatio)';
+  return 'MvrvData(date: $date, mvrvZscore: $mvrvZscore)';
 }
 
 
@@ -51,7 +50,7 @@ abstract mixin class $MvrvDataCopyWith<$Res>  {
   factory $MvrvDataCopyWith(MvrvData value, $Res Function(MvrvData) _then) = _$MvrvDataCopyWithImpl;
 @useResult
 $Res call({
- DateTime date, double btcPrice, double mvrvRatio
+ DateTime date, double mvrvZscore
 });
 
 
@@ -68,11 +67,10 @@ class _$MvrvDataCopyWithImpl<$Res>
 
 /// Create a copy of MvrvData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? btcPrice = null,Object? mvrvRatio = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? mvrvZscore = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,btcPrice: null == btcPrice ? _self.btcPrice : btcPrice // ignore: cast_nullable_to_non_nullable
-as double,mvrvRatio: null == mvrvRatio ? _self.mvrvRatio : mvrvRatio // ignore: cast_nullable_to_non_nullable
+as DateTime,mvrvZscore: null == mvrvZscore ? _self.mvrvZscore : mvrvZscore // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -158,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime date,  double btcPrice,  double mvrvRatio)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime date,  double mvrvZscore)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MvrvData() when $default != null:
-return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
+return $default(_that.date,_that.mvrvZscore);case _:
   return orElse();
 
 }
@@ -179,10 +177,10 @@ return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime date,  double btcPrice,  double mvrvRatio)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime date,  double mvrvZscore)  $default,) {final _that = this;
 switch (_that) {
 case _MvrvData():
-return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
+return $default(_that.date,_that.mvrvZscore);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +197,10 @@ return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime date,  double btcPrice,  double mvrvRatio)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime date,  double mvrvZscore)?  $default,) {final _that = this;
 switch (_that) {
 case _MvrvData() when $default != null:
-return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
+return $default(_that.date,_that.mvrvZscore);case _:
   return null;
 
 }
@@ -214,15 +212,13 @@ return $default(_that.date,_that.btcPrice,_that.mvrvRatio);case _:
 @JsonSerializable()
 
 class _MvrvData implements MvrvData {
-  const _MvrvData({required this.date, required this.btcPrice, required this.mvrvRatio});
+  const _MvrvData({required this.date, required this.mvrvZscore});
   factory _MvrvData.fromJson(Map<String, dynamic> json) => _$MvrvDataFromJson(json);
 
-/// 날짜
+/// 데이터 기준일
 @override final  DateTime date;
-/// BTC 가격 (USD)
-@override final  double btcPrice;
-/// MVRV 비율
-@override final  double mvrvRatio;
+/// MVRV Z-Score 값
+@override final  double mvrvZscore;
 
 /// Create a copy of MvrvData
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MvrvData&&(identical(other.date, date) || other.date == date)&&(identical(other.btcPrice, btcPrice) || other.btcPrice == btcPrice)&&(identical(other.mvrvRatio, mvrvRatio) || other.mvrvRatio == mvrvRatio));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MvrvData&&(identical(other.date, date) || other.date == date)&&(identical(other.mvrvZscore, mvrvZscore) || other.mvrvZscore == mvrvZscore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,btcPrice,mvrvRatio);
+int get hashCode => Object.hash(runtimeType,date,mvrvZscore);
 
 @override
 String toString() {
-  return 'MvrvData(date: $date, btcPrice: $btcPrice, mvrvRatio: $mvrvRatio)';
+  return 'MvrvData(date: $date, mvrvZscore: $mvrvZscore)';
 }
 
 
@@ -257,7 +253,7 @@ abstract mixin class _$MvrvDataCopyWith<$Res> implements $MvrvDataCopyWith<$Res>
   factory _$MvrvDataCopyWith(_MvrvData value, $Res Function(_MvrvData) _then) = __$MvrvDataCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime date, double btcPrice, double mvrvRatio
+ DateTime date, double mvrvZscore
 });
 
 
@@ -274,11 +270,10 @@ class __$MvrvDataCopyWithImpl<$Res>
 
 /// Create a copy of MvrvData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? btcPrice = null,Object? mvrvRatio = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? mvrvZscore = null,}) {
   return _then(_MvrvData(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,btcPrice: null == btcPrice ? _self.btcPrice : btcPrice // ignore: cast_nullable_to_non_nullable
-as double,mvrvRatio: null == mvrvRatio ? _self.mvrvRatio : mvrvRatio // ignore: cast_nullable_to_non_nullable
+as DateTime,mvrvZscore: null == mvrvZscore ? _self.mvrvZscore : mvrvZscore // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

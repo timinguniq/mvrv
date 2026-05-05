@@ -2,15 +2,15 @@ import 'package:mvrv/core/core.dart';
 import 'package:mvrv/domain/domain.dart';
 import 'package:mvrv/entity/entity.dart';
 
-final _logger = CustomLogger.create(tag: (GetBtcPriceUsecase).toString());
+final _logger = CustomLogger.create(tag: (GetCurrentMvrvUsecase).toString());
 
-/// 비트코인 현재가 조회 UseCase
-class GetBtcPriceUsecase extends RemoteUsecase<BtcPriceRepository> {
-  GetBtcPriceUsecase();
+/// 현재 MVRV Z-Score 조회 UseCase
+class GetCurrentMvrvUsecase extends RemoteUsecase<MvrvRepository> {
+  GetCurrentMvrvUsecase();
 
   @override
-  Future<Result<BtcPrice>> call(BtcPriceRepository repository) async {
-    final response = await repository.getBtcPrice();
+  Future<Result<MvrvData>> call(MvrvRepository repository) async {
+    final response = await repository.getCurrentMvrv();
 
     return response.map(
       success: (success) => Result.success(success.data),

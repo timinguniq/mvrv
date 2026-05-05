@@ -15,31 +15,31 @@ part 'dashboard.view_model.dart';
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
-  // UI 구성을 위한 임시 mock 데이터 – API 연동 시 Provider 로 교체
-  static const _zScore = 2.41;
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return DefaultLayout(
       backgroundColor: DashboardPalette.background,
       child: BaseView<DashboardViewModel>(
         viewModel: DashboardViewModel(),
-        builder: (context, viewModel){
-          if(viewModel.btcPrice == null){
+        builder: (context, viewModel) {
+          if (viewModel.btcPrice == null || viewModel.mvrv == null) {
             return SizedBox();
           }
 
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(            crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const DashboardAppBar(),
                   const SizedBox(height: 10),
-                  MarketPriceCard(price: viewModel.btcPrice!.price, changePercent24h: viewModel.btcPrice!.changePercent24h),
+                  MarketPriceCard(
+                    price: viewModel.btcPrice!.price,
+                    changePercent24h: viewModel.btcPrice!.changePercent24h,
+                  ),
                   const SizedBox(height: 16),
-                  const MvrvZScoreCard(zScore: _zScore),
+                  MvrvZScoreCard(zScore: viewModel.mvrv!.mvrvZscore),
                   const SizedBox(height: 28),
                   const MvrvTrendChartCard(),
                   const SizedBox(height: 28),
@@ -60,11 +60,12 @@ class DashboardPage extends StatelessWidget {
                     value: '0.582',
                     description: 'Aggregated profit ratio',
                   ),
-                ],),
+                ],
+              ),
             ),
-          ) ;
-        }
-      )
+          );
+        },
+      ),
     );
   }
 }
