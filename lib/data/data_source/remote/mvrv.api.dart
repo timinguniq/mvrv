@@ -1,16 +1,12 @@
 import 'package:dio/dio.dart';
 
-/// MVRV Z-Score(BGeometrics) 및 BTC 시세(CoinGecko) API 클라이언트
+/// BTC 시세(CoinGecko) API 클라이언트
+///
+/// MVRV Z-Score 는 Firestore 캐시에서 읽으므로 여기에 포함되지 않음
 class MvrvApi {
-  MvrvApi(this._bgeometricsDio, this._coinGeckoDio);
+  MvrvApi(this._coinGeckoDio);
 
-  final Dio _bgeometricsDio;
   final Dio _coinGeckoDio;
-
-  /// 가장 최근 MVRV Z-Score 조회
-  Future<Response> getLatestMvrvZscore() async {
-    return _bgeometricsDio.get('/mvrv-zscore/last');
-  }
 
   /// BTC 현재가 + 24h 변동률 조회 (USD)
   Future<Response> getBtcPrice() async {

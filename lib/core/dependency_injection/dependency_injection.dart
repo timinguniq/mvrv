@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mvrv/core/core.dart';
 import 'package:mvrv/data/data.dart';
@@ -13,14 +14,15 @@ void configureDependencyInjection(LocalStorage storage) {
 }
 
 void _data(LocalStorage storage) {
-  locator.registerSingleton<MvrvApi>(
-    MvrvApi(CHttpClient.bgeometricsDio, CHttpClient.coinGeckoDio),
+  locator.registerSingleton<MvrvApi>(MvrvApi(CHttpClient.coinGeckoDio));
+  locator.registerSingleton<MvrvFirestoreDatasource>(
+    MvrvFirestoreDatasource(FirebaseFirestore.instance),
   );
 }
 
 void _repository() {
   locator.registerSingleton<MvrvRepository>(
-    MvrvRepositoryImpl(locator<MvrvApi>()),
+    MvrvRepositoryImpl(locator<MvrvApi>(), locator<MvrvFirestoreDatasource>()),
   );
 }
 

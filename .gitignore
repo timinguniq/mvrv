@@ -51,3 +51,11 @@ lib/firebase_options.dart
 
 # Dotenv
 *.env
+
+# functions
+/functions/*
+/firebase.json
+/firestore.rules
+/.firebaserc
+
+
