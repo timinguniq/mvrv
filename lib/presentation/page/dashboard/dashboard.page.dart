@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mvrv/core/core.dart';
 import 'package:mvrv/domain/domain.dart';
-import 'package:mvrv/presentation/presentation.dart';
 import 'package:mvrv/entity/entity.dart';
+import 'package:mvrv/presentation/presentation.dart';
 import 'package:mvrv/theme/theme.dart';
 
 part 'dashboard.view_model.dart';
@@ -49,16 +48,10 @@ class DashboardPage extends StatelessWidget {
                     onRangeChanged: viewModel.changeChartRange,
                   ),
                   const SizedBox(height: 28),
-                  const MetricCard(
+                  MetricCard(
                     title: 'Delta Cap',
-                    value: '\$412.8B',
+                    value: _formatUsdCompact(viewModel.deltaCap!),
                     description: 'Institutional base support',
-                  ),
-                  const SizedBox(height: 14),
-                  const MetricCard(
-                    title: 'Realized Cap',
-                    value: '\$621.2B',
-                    description: 'Current market cost basis',
                   ),
                   const SizedBox(height: 14),
                   const MetricCard(
@@ -74,6 +67,17 @@ class DashboardPage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 큰 USD 값을 `$xxx.xB` / `$xx.xT` 형태의 컴팩트 문자열로 변환
+String _formatUsdCompact(double value) {
+  final abs = value.abs();
+  final sign = value < 0 ? '-' : '';
+  if (abs >= 1e12) return '$sign\$${(abs / 1e12).toStringAsFixed(2)}T';
+  if (abs >= 1e9) return '$sign\$${(abs / 1e9).toStringAsFixed(1)}B';
+  if (abs >= 1e6) return '$sign\$${(abs / 1e6).toStringAsFixed(1)}M';
+  if (abs >= 1e3) return '$sign\$${(abs / 1e3).toStringAsFixed(1)}K';
+  return '$sign\$${abs.toStringAsFixed(0)}';
 }
 
 class _MarketPricePlaceholder extends StatelessWidget {

@@ -18,6 +18,14 @@ class DashboardViewModel extends BaseViewModel {
   MvrvChartRange _chartRange = MvrvChartRange.oneMonth;
   MvrvChartRange get chartRange => _chartRange;
 
+  /// 비트코인 최대 공급량 (실제 채굴 한도)
+  static const _btcMaxSupply = 21000000;
+
+  /// Delta Cap 근사값 (USD) = 현재가 × 2,100만
+  /// BTC 가격 미수신 시 null.
+  double? get deltaCap =>
+      _btcPrice == null ? null : _btcPrice!.price * _btcMaxSupply;
+
   void updateBtcPrice(BtcPrice value) {
     if (_btcPrice != value) {
       _btcPrice = value;
