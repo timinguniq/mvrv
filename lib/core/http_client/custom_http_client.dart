@@ -27,10 +27,10 @@ class CHttpClient {
     ),
   )..interceptors.add(_CustomInterceptor());
 
-  /// CoinGecko 시세 API용 Dio
-  static final Dio coinGeckoDio = Dio(
+  /// Binance 시세 API용 Dio
+  static final Dio binanceDio = Dio(
     BaseOptions(
-      baseUrl: 'https://api.coingecko.com/api/v3',
+      baseUrl: 'https://api.binance.com/api/v3',
       contentType: 'application/json',
       connectTimeout: const Duration(seconds: 10),
       sendTimeout: const Duration(seconds: 10),

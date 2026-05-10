@@ -8,7 +8,7 @@ final _logger = CustomLogger.create(tag: (MvrvRepositoryImpl).toString());
 /// MVRV Z-Score / BTC 시세 Repository 구현체
 ///
 /// MVRV Z-Score 는 Firestore 캐시(`mvrv_z_history`) 에서 읽고,
-/// BTC 시세는 CoinGecko API 를 직접 호출
+/// BTC 시세는 Binance API 를 직접 호출
 class MvrvRepositoryImpl implements MvrvRepository {
   MvrvRepositoryImpl(this._api, this._firestoreDatasource);
 
@@ -50,10 +50,9 @@ class MvrvRepositoryImpl implements MvrvRepository {
     try {
       final response = await _api.getBtcPrice();
       final raw = response.data as Map<String, dynamic>;
-      final btc = raw['bitcoin'] as Map<String, dynamic>;
       final price = BtcPrice(
-        price: (btc['usd'] as num).toDouble(),
-        changePercent24h: (btc['usd_24h_change'] as num).toDouble(),
+        price: double.parse(raw['lastPrice'] as String),
+        changePercent24h: double.parse(raw['priceChangePercent'] as String),
       );
       return Result.success(price);
     } catch (e, st) {

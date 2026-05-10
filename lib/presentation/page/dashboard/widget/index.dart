@@ -1,4 +1,5 @@
 export 'dashboard_app_bar.dart';
+export 'dashboard_banner_ad.dart';
 export 'dashboard_card.dart';
 export 'market_price_card.dart';
 export 'metric_card.dart';
