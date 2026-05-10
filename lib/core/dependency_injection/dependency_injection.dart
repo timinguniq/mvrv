@@ -21,6 +21,9 @@ void _data(LocalStorage storage) {
   locator.registerSingleton<NuplFirestoreDatasource>(
     NuplFirestoreDatasource(FirebaseFirestore.instance),
   );
+  locator.registerSingleton<LaunchCountLocalDatasource>(
+    LaunchCountLocalDatasource(),
+  );
 }
 
 void _repository() {
