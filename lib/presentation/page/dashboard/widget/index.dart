@@ -5,3 +5,4 @@ export 'metric_card.dart';
 export 'mvrv_insight_card.dart';
 export 'mvrv_trend_chart_card.dart';
 export 'mvrv_zscore_card.dart';
+export 'nupl_card.dart';

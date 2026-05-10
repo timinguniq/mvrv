@@ -18,17 +18,26 @@ void _data(LocalStorage storage) {
   locator.registerSingleton<MvrvFirestoreDatasource>(
     MvrvFirestoreDatasource(FirebaseFirestore.instance),
   );
+  locator.registerSingleton<NuplFirestoreDatasource>(
+    NuplFirestoreDatasource(FirebaseFirestore.instance),
+  );
 }
 
 void _repository() {
   locator.registerSingleton<MvrvRepository>(
     MvrvRepositoryImpl(locator<MvrvApi>(), locator<MvrvFirestoreDatasource>()),
   );
+  locator.registerSingleton<NuplRepository>(
+    NuplRepositoryImpl(locator<NuplFirestoreDatasource>()),
+  );
 }
 
 void _usecase() {
   locator.registerSingleton<MvrvUsecase>(
     MvrvUsecase(locator<MvrvRepository>()),
+  );
+  locator.registerSingleton<NuplUsecase>(
+    NuplUsecase(locator<NuplRepository>()),
   );
 }
 
