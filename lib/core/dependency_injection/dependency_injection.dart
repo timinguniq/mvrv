@@ -14,12 +14,15 @@ void configureDependencyInjection(LocalStorage storage) {
 }
 
 void _data(LocalStorage storage) {
-  locator.registerSingleton<MvrvApi>(MvrvApi(CHttpClient.coinGeckoDio));
+  locator.registerSingleton<MvrvApi>(MvrvApi(CHttpClient.binanceDio));
   locator.registerSingleton<MvrvFirestoreDatasource>(
     MvrvFirestoreDatasource(FirebaseFirestore.instance),
   );
   locator.registerSingleton<NuplFirestoreDatasource>(
     NuplFirestoreDatasource(FirebaseFirestore.instance),
+  );
+  locator.registerSingleton<LaunchCountLocalDatasource>(
+    LaunchCountLocalDatasource(),
   );
 }
 

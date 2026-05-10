@@ -340,8 +340,11 @@ class _SplashPageState extends ConsumerState<SplashPage>
     // 앱 업데이트가 필요한 경우 초기화 중단.
     await postLaunchSetup();
 
-    // 로딩 애니메이션 완료 대기
-    await Future.delayed(const Duration(milliseconds: _animationTime));
+    // 로딩 애니메이션 + 전면광고(5회마다) 처리 병렬 진행
+    await Future.wait([
+      Future.delayed(const Duration(milliseconds: _animationTime)),
+      LaunchInterstitialAd.handleLaunch(),
+    ]);
     CRoute.redirectToDashboard();
     _logger.d('App initialize end');
   }

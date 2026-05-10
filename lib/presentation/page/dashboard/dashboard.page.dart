@@ -21,44 +21,53 @@ class DashboardPage extends StatelessWidget {
       child: BaseView<DashboardViewModel>(
         viewModel: DashboardViewModel(),
         builder: (context, viewModel) {
-          if (viewModel.btcPrice == null ||
-              viewModel.mvrv == null ||
-              viewModel.mvrvHistory == null ||
-              viewModel.nupl == null) {
-            return SizedBox();
-          }
-
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const DashboardAppBar(),
-                  const SizedBox(height: 10),
-                  MarketPriceCard(
-                    price: viewModel.btcPrice!.price,
-                    changePercent24h: viewModel.btcPrice!.changePercent24h,
-                  ),
-                  const SizedBox(height: 16),
-                  MvrvZScoreCard(zScore: viewModel.mvrv!.mvrvZscore),
-                  const SizedBox(height: 28),
-                  MvrvTrendChartCard(
-                    range: viewModel.chartRange,
-                    history: viewModel.mvrvHistory!,
-                    onRangeChanged: viewModel.changeChartRange,
-                  ),
-                  const SizedBox(height: 28),
-                  MetricCard(
-                    title: 'Delta Cap',
-                    value: _formatUsdCompact(viewModel.deltaCap!),
-                    description: 'Institutional base support',
-                  ),
-                  const SizedBox(height: 14),
-                  NuplCard(nupl: viewModel.nupl!.nupl),
-                ],
+          return Column(
+            children: [
+              Expanded(
+                child: (viewModel.btcPrice == null ||
+                        viewModel.mvrv == null ||
+                        viewModel.mvrvHistory == null ||
+                        viewModel.nupl == null)
+                    ? const SizedBox.expand()
+                    : SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const DashboardAppBar(),
+                              const SizedBox(height: 10),
+                              MarketPriceCard(
+                                price: viewModel.btcPrice!.price,
+                                changePercent24h:
+                                    viewModel.btcPrice!.changePercent24h,
+                              ),
+                              const SizedBox(height: 16),
+                              MvrvZScoreCard(
+                                zScore: viewModel.mvrv!.mvrvZscore,
+                              ),
+                              const SizedBox(height: 28),
+                              MvrvTrendChartCard(
+                                range: viewModel.chartRange,
+                                history: viewModel.mvrvHistory!,
+                                onRangeChanged: viewModel.changeChartRange,
+                              ),
+                              const SizedBox(height: 28),
+                              MetricCard(
+                                title: 'Delta Cap',
+                                value: _formatUsdCompact(viewModel.deltaCap!),
+                                description: 'Institutional base support',
+                              ),
+                              const SizedBox(height: 14),
+                              NuplCard(nupl: viewModel.nupl!.nupl),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
               ),
-            ),
+              const Center(child: DashboardBannerAd()),
+            ],
           );
         },
       ),
