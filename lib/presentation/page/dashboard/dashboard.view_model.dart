@@ -15,6 +15,9 @@ class DashboardViewModel extends BaseViewModel {
   List<MvrvData>? _mvrvHistory;
   List<MvrvData>? get mvrvHistory => _mvrvHistory;
 
+  NuplData? _nupl;
+  NuplData? get nupl => _nupl;
+
   MvrvChartRange _chartRange = MvrvChartRange.oneMonth;
   MvrvChartRange get chartRange => _chartRange;
 
@@ -45,6 +48,13 @@ class DashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void updateNupl(NuplData value) {
+    if (_nupl != value) {
+      _nupl = value;
+      notifyListeners();
+    }
+  }
+
   /// 차트 기간 변경 → 해당 범위로 히스토리 재조회
   Future<void> changeChartRange(MvrvChartRange range) async {
     if (_chartRange == range) return;
@@ -53,10 +63,15 @@ class DashboardViewModel extends BaseViewModel {
     await _fetchHistory();
   }
 
-  /// 대시보드 데이터 조회 (BTC 가격 + MVRV 현재값 + MVRV 히스토리 병렬)
+  /// 대시보드 데이터 조회 (BTC 가격 + MVRV 현재값/히스토리 + NUPL 현재값 병렬)
   Future<void> fetch() async {
     isBusy = true;
-    await Future.wait([_fetchBtcPrice(), _fetchMvrv(), _fetchHistory()]);
+    await Future.wait([
+      _fetchBtcPrice(),
+      _fetchMvrv(),
+      _fetchHistory(),
+      _fetchNupl(),
+    ]);
     isBusy = false;
   }
 
@@ -77,6 +92,16 @@ class DashboardViewModel extends BaseViewModel {
     result.when(
       success: updateMvrv,
       failure: (error) => log('GetCurrentMvrvUsecase error : $error'),
+    );
+  }
+
+  Future<void> _fetchNupl() async {
+    final result = await locator<NuplUsecase>().execute<Result<NuplData>>(
+      usecase: GetCurrentNuplUsecase(),
+    );
+    result.when(
+      success: updateNupl,
+      failure: (error) => log('GetCurrentNuplUsecase error : $error'),
     );
   }
 

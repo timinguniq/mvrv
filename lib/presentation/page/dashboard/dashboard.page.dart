@@ -23,7 +23,8 @@ class DashboardPage extends StatelessWidget {
         builder: (context, viewModel) {
           if (viewModel.btcPrice == null ||
               viewModel.mvrv == null ||
-              viewModel.mvrvHistory == null) {
+              viewModel.mvrvHistory == null ||
+              viewModel.nupl == null) {
             return SizedBox();
           }
 
@@ -54,11 +55,7 @@ class DashboardPage extends StatelessWidget {
                     description: 'Institutional base support',
                   ),
                   const SizedBox(height: 14),
-                  const MetricCard(
-                    title: 'Net Unrealized P/L',
-                    value: '0.582',
-                    description: 'Aggregated profit ratio',
-                  ),
+                  NuplCard(nupl: viewModel.nupl!.nupl),
                 ],
               ),
             ),
