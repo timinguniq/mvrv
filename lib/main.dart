@@ -46,6 +46,7 @@ Future<void> main() async {
         await RemoteConfig.initialize();
 
         unawaited(MobileAds.instance.initialize());
+        await WidgetService.initialize();
 
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
