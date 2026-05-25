@@ -1,53 +1,78 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions
+as needed.
 
-## Project Overview
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-Flutter app ("base_flutter_app" in pubspec) using Dart SDK >=3.11.0. Targets iOS, Android, and web. Uses Firebase (Analytics, Crashlytics, Remote Config), Riverpod + Provider for state management, and go_router for navigation.
+## 1. Think Before Coding
 
-## Common Commands
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-```bash
-# Run the app
-flutter run
+Before implementing:
 
-# Code generation (freezed, json_serializable)
-just gen-code
-# or directly: dart run build_runner build
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-# Run tests
-just test                          # runs test/api/*
-flutter test                       # all tests
-flutter test test/some_test.dart   # single test
+## 2. Simplicity First
 
-# Clean rebuild (iOS)
-just clean-and-install
+**Minimum code that solves the problem. Nothing speculative.**
 
-# Production builds
-just build-ios-production
-just build-android-production
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-# Lint
-flutter analyze
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-## Architecture
+## 5. Coding Guidelines
 
-Clean architecture with four layers under `lib/`:
+- Adhere to SOLID principles when writing code.
+- Utilize OOP design patterns whenever applicable!
 
-- **`core/`** — Infrastructure: HTTP client (Dio-based `CHttpClient`), dependency injection (GetIt via `locator`), local storage, Firebase remote config, environment config, analytics, logging (`CustomLogger`)
-- **`entity/`** — Data models using freezed + json_serializable. Core models include `ResultModel`, `ResponseWrapper`, `AppVersion`, `AppServiceStatus`
-- **`data/`** — API clients and data source implementations (currently scaffolded, not populated)
-- **`domain/`** — Repository interfaces and use cases (currently scaffolded, not populated)
-- **`presentation/`** — UI layer: pages, widgets, routes (go_router), services (ThemeService)
-- **`theme/`** — Design system: `AppTheme` foundation (color, typography, decorations), components (buttons, icons, images, indicators, lottie), light/dark theme definitions. Uses Pretendard font family.
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant
+clarification.
 
-## Key Patterns
+---
 
-- **Barrel exports**: Each directory has an `index.dart` that re-exports its contents. Import the barrel, not individual files.
-- **DI**: `GetIt` configured in `lib/core/dependency_injection/dependency_injection.dart`. Register APIs → Repositories → Managers → Use cases.
-- **Environment**: Config loaded from `.env` via `flutter_dotenv`. Endpoint configuration uses freezed models in `app_endpoint.dart`.
-- **Routing**: `go_router` configured in `lib/presentation/route/custom_route.dart` with `RoutePath` enum for path definitions.
-- **Code generation**: Run `just gen-code` after modifying any `@freezed` or `@JsonSerializable` annotated classes. Generated files use `.freezed.dart` and `.g.dart` suffixes.
-- **Comments in Korean**: Codebase comments are written in Korean.
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to
+overcomplication, and clarifying questions come before implementation rather than after mistakes.

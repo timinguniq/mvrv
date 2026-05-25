@@ -58,4 +58,6 @@ lib/firebase_options.dart
 /firestore.rules
 /.firebaserc
 
+# screenshots
+/screenshots
 

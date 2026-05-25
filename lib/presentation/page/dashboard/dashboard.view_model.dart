@@ -90,7 +90,10 @@ class DashboardViewModel extends BaseViewModel {
       usecase: GetCurrentMvrvUsecase(),
     );
     result.when(
-      success: updateMvrv,
+      success: (data) {
+        updateMvrv(data);
+        unawaited(WidgetService.saveMvrvZscore(data.mvrvZscore));
+      },
       failure: (error) => log('GetCurrentMvrvUsecase error : $error'),
     );
   }
